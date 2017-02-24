@@ -1,0 +1,14 @@
+import java.security.MessageDigest; //hash code sourced from: https://www.mkyong.com/java/java-md5-hashing-example/
+public class HowAboutANiceGameOfChess{
+    public static void main(String[] args)throws Exception{
+    	String input; MessageDigest md = MessageDigest.getInstance("MD5"); int n = 1; String password = "";
+    	password_loop: for(int j = 0; j <  10000000; j++ ){ //needs many iterations to find 8 hashes beginning with 5 0's to be used to create an 8 character password
+    		input = args[0] + j; md.update(input.getBytes()); byte byteData[] = md.digest(); StringBuffer sb = new StringBuffer(); //input is door ID + incremental integer, beginning from 0
+    		for (int i = 0; i < byteData.length; i++) { sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1)); }
+    		if(sb.toString().substring(0,5).equals("00000")){
+    			if(n <= 8){ password = password.concat(sb.toString().substring(5,6)); n++; } //digit used for password is 6th character in MD5 hash
+    			else{ break password_loop; }
+    		}
+    	} System.out.print(password);
+    }
+}
