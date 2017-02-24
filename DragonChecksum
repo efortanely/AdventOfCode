@@ -1,0 +1,22 @@
+public class DragonChecksum { //dragon method is modification on: http://bit.ly/2ieO8J0
+	public static void main(String[] args){
+		int length = 272; String manip = args[0]; String checksum = "";
+		while(manip.length() < length) manip = manip + "0" + dragon(manip); //expand until size length
+		manip = manip.substring(0, length); //chop to length
+		do{ //checksum 1/2 size of input, equal pairs 11 or 00 = 1, unequal pairs 01 or 10 = 0
+			for(int i = 0; i < manip.length(); i += 2){
+				if(manip.charAt(i) == manip.charAt(i + 1)) checksum = checksum.concat("1");
+				else checksum = checksum.concat("0");
+			}
+			manip = checksum;
+			checksum = "";
+		}while(manip.length() % 2 == 0); //only return a checksum with odd number of characters
+		System.out.println(manip);
+	}
+	 static String dragon(String s){
+		   if(s.length() == 0) return ""; 
+		   if(s.charAt(s.length() - 1) == '1') return "0" + dragon(s.substring(0,s.length()-1));
+		   if(s.charAt(s.length() - 1) == '0') return "1" + dragon(s.substring(0,s.length()-1));
+		   else return "";
+	}
+}
