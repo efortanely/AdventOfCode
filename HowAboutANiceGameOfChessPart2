@@ -1,0 +1,15 @@
+import java.security.MessageDigest; //hash code sourced from: https://www.mkyong.com/java/java-md5-sb.toString()ing-example/
+public class HowAboutANiceGameOfChessPart2{ //input goes in arguments
+    public static void main(String[] args)throws Exception{
+    	String input; MessageDigest md = MessageDigest.getInstance("MD5"); String[] password = new String[8]; int n = 1;
+    	password_loop: for(int j = 0; j <  1000000000; j++ ){ //finds 8 hashes beginning with 5 0's to be used to create an 8 character password, this # iterations is probably way too high
+    		input = args[0] + j; md.update(input.getBytes()); byte byteData[] = md.digest(); StringBuffer sb = new StringBuffer(); //input is door ID + incremented integer, beginning from 0
+    		for (int i = 0; i < byteData.length; i++) { sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1)); }
+	    	if(n <= 8){ //first 5 digits are zeros, ignore invalid positions (not 0-7) and identical positions after first initialized to that position
+	    		if( sb.toString().substring(0,5).equals("00000") && (sb.toString().charAt(5) >= 48 && sb.toString().charAt(5) <= 55) && password[Integer.parseInt(sb.toString().substring(5,6))] == null ){ 
+	    			password[Integer.parseInt(sb.toString().substring(5,6))] = sb.toString().substring(6,7); n++; //6th digit is index, 7th is character inserted
+	    		}
+	    	}else{ break password_loop; } //stops making hashes once password array is completed (8 characters have been created for it)
+    	}for(int index = 0; index < password.length; index++){ System.out.print(password[index]); } 
+    } //just run it and get up and go get a drink or something. eventually you will have a "secure" password (but not really because of the fallibility of MD5 hashes)
+}
