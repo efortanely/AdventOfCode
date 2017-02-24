@@ -1,0 +1,22 @@
+import java.io.File; import java.util.ArrayList; import java.util.Scanner;
+public class TimingIsEverythingPart2{
+	public static void main(String[] args) throws Exception{
+		ArrayList<String> input = new ArrayList<String>(); Scanner s = new Scanner(new File("input.txt"));
+		while(s.hasNext()){ //inputs size of disc and position in array list
+			s.next();
+			if(s.findInLine("\\d+") != null){ input.add(s.findInLine("\\d+")); }
+		}
+	    s.close();
+		for (int i = 0; i < 5000000; i++) { //iff all disc positions are equal to 0 in ascending order by increments of 1
+			if((i + 1 + Integer.parseInt(input.get(1))) % Integer.parseInt(input.get(0)) == 0 
+					&& (i + 2 + Integer.parseInt(input.get(3))) % Integer.parseInt(input.get(2)) == 0 
+					&& (i + 3 + Integer.parseInt(input.get(5))) % Integer.parseInt(input.get(4)) == 0 
+					&& (i + 4 + Integer.parseInt(input.get(7))) % Integer.parseInt(input.get(6)) == 0 
+					&& (i + 5 + Integer.parseInt(input.get(9))) % Integer.parseInt(input.get(8)) == 0 
+					&& (i + 6 + Integer.parseInt(input.get(11))) % Integer.parseInt(input.get(10)) == 0 
+					&& ((i + 7) % 11) == 0){ 
+				System.out.println("Pull the lever at " + i + ", Kronk!\n\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tWrooooooong leeeeeveeeeeeer..."); 
+			}
+		}
+	}
+}
