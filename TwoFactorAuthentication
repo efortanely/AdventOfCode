@@ -1,0 +1,32 @@
+public class TwoFactorAuthentication {
+	public static void main(String[] args){
+		int columns = 50; int rows = 6; int pixels = 0; String temp = ""; String[] seperatedArgs; String[][] screen = new String[rows][columns];
+		for(int input = 0; input < args.length; input++){ if(args[input].contains("rect") || args[input].contains("rotate")){ temp = temp.concat(","); } temp = temp.concat(args[input]); }
+		seperatedArgs = temp.split(","); //manipulates input
+		for(int r = 0; r < rows; r++){ for(int c = 0; c < columns; c++){ screen[r][c] = "."; } } //initialize screen with dots
+		for(int input = 0; input < seperatedArgs.length; input++){ //alters screen's pixels
+			if(seperatedArgs[input].contains("rect")){
+				seperatedArgs[input] = seperatedArgs[input].substring(4);
+				String[] rectInput = seperatedArgs[input].split("x");
+				for(int r = 0; r < Integer.parseInt(rectInput[1]); r++){ for(int c = 0; c < Integer.parseInt(rectInput[0]); c++){ screen[r][c] = "*"; } }
+			}else if(seperatedArgs[input].contains("column")){
+				seperatedArgs[input] = seperatedArgs[input].substring(14);
+				String[] rectInput = seperatedArgs[input].split("by");
+				for(int i = 0; i < Integer.parseInt(rectInput[1]); i++){
+					String wrappedValue = screen[rows - 1][Integer.parseInt(rectInput[0])];
+					for(int k = rows - 1; k >= 1; k--){ screen[k][Integer.parseInt(rectInput[0])] = screen[k - 1][Integer.parseInt(rectInput[0])]; }
+					screen[0][Integer.parseInt(rectInput[0])] = wrappedValue;
+				}
+			}else if(seperatedArgs[input].contains("row")){
+				seperatedArgs[input] = seperatedArgs[input].substring(11);
+				String[] rectInput = seperatedArgs[input].split("by");
+				for(int i = 0; i < Integer.parseInt(rectInput[1]); i++){
+					String wrappedValue = screen[Integer.parseInt(rectInput[0])][columns - 1];
+					for(int k = columns - 1; k >= 1; k--){ screen[Integer.parseInt(rectInput[0])][k] = screen[Integer.parseInt(rectInput[0])][k - 1]; }
+					screen[Integer.parseInt(rectInput[0])][0] = wrappedValue;
+				}
+			}
+		} for(int r = 0; r < rows; r++){ for(int c = 0; c < columns; c++){ if(screen[r][c].equals("*")){ pixels++; } } } //counts number of pixels
+		System.out.print("The little screen should be displaying " + pixels + " pixels..." );
+	}
+}
