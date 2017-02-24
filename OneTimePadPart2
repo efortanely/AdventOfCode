@@ -1,0 +1,44 @@
+import java.security.MessageDigest; //hash code sourced from: https://www.mkyong.com/java/java-md5-sb.toString()ing-example/
+import java.util.ArrayList;
+import java.util.Collections;
+public class OneTimePadPart2 { //input salt via argument field
+	public static void main(String[] args) throws Exception{
+		String hash; ArrayList<String[]> triples = new ArrayList<String[]>(); ArrayList<Integer> keysCreatedAt = new ArrayList<Integer>();
+		for(int h = 0; h <= 30000; h++ ){ //checks hashes until 64 keys (hashes meeting certain criteria) are created
+			hash = hash(args[0] + h); 
+			for(int i = triples.size() - 1; i > 0; i--){ //disregard triple pairs after 1000 hashes have been searched for quintuple pair
+				String[] pair = triples.get(i);
+				if(pair[0].equals("1001")) triples.remove(pair);
+				else pair[0] = Integer.toString(Integer.parseInt(pair[0]) + 1); 
+			}
+			for(int q = 0; q <= hash.length() - 5; q++){ 
+				String quint = hash.substring(q, q + 5); //creates every string of length 5 from hash
+				for(int i = triples.size() - 1; i > 0; i--){ //searches entire array list of previous potential keys with quintuple pairs
+					String[] pair = triples.get(i);
+					if(quint.equals(pair[1])){ //if string equals any of the quintuple pairs
+						keysCreatedAt.add(h - Integer.parseInt(pair[0])); //store the iteration the triple was found at
+						triples.remove(pair); //delete the string, stops looking for match for that key
+					}
+				}
+			}
+			triplesLoop: for(int x = 0; x <= hash.length() - 3; x++){ //finds first triplet pair and initializes its quintuplet pair into array
+				String tripleTemp = hash.substring(x, x + 3); String[] pairTemp = {"0",""};
+				if(tripleTemp.charAt(0) == tripleTemp.charAt(1) && tripleTemp.charAt(1) == tripleTemp.charAt(2)){
+					pairTemp[1] = tripleTemp.substring(0, 1) + tripleTemp.substring(0, 1) + tripleTemp.substring(0, 1) + tripleTemp.substring(0, 1) + tripleTemp.substring(0, 1);
+					triples.add(pairTemp);
+					break triplesLoop; //stop looking for triples after first match
+				}
+			}
+		}Collections.sort(keysCreatedAt);
+		 System.out.println(keysCreatedAt.get(63));
+	}
+	public static String hash(String s)throws Exception{
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		for(int i = 0; i <= 2016; i++){
+			md.update(s.getBytes()); byte byteData[] = md.digest(); StringBuffer sb = new StringBuffer();
+			for (int j = 0; j < byteData.length; j++){ sb.append(Integer.toString((byteData[j] & 0xff) + 0x100, 16).substring(1)); }
+			s = sb.toString();
+		}
+		return s;
+	}	
+}
