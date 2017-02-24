@@ -1,0 +1,14 @@
+public class BathroomSecurityPart2 { //I have nothing nice to say about this program except that it is functional
+	public static void main(String[] arguments){
+		int r = 2; int c = 0; String[][] numPad = { {"","","1","",""}, {"","2","3","4",""}, {"5","6","7","8","9"}, {"","A","B","C",""}, {"","","D","",""}};
+		for(String buttonPressed : arguments){
+			for(int fingerMovement = 0; fingerMovement < buttonPressed.length(); fingerMovement++){ //won't update movement if impossible, given coordinate
+				if(buttonPressed.substring(fingerMovement,  fingerMovement + 1).equals("R")){ if(!((c == 2 && (r == 0 || r == 4)) || (c == 3 && (r == 1 || r == 3)) || c == 4)){c++;;} }
+				else if(buttonPressed.substring(fingerMovement,  fingerMovement + 1).equals("U")){ if(!((r == 2 && (c == 0 || c == 4)) || (r == 1 && (c == 1 || c == 3)) || r == 0)){r--;} }
+				else if(buttonPressed.substring(fingerMovement,  fingerMovement + 1).equals("L")){ if(!((c == 2 && (r == 0 || r == 4)) || (c == 1 && (r == 1 || r == 3)) || c == 0)){c--;} }
+				else if(buttonPressed.substring(fingerMovement,  fingerMovement + 1).equals("D")){ if(!((r == 2 && (c == 0 || c == 4)) || (r == 3 && (c == 1 || c == 3)) || r == 4)){r++;} }
+			}
+			System.out.print(numPad[r][c]); //prints corresponding button
+		}
+	}
+}
