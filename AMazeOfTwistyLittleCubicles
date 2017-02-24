@@ -1,0 +1,24 @@
+import java.util.ArrayList;
+public class AMazeOfTwistyLittleCubicles {
+	public static void main(String[] arg){
+		int favoriteNumber = 1352; int goalRow = 39; int goalColumn = 31; int rows = goalRow + 10; int columns = goalColumn + 10; int steps = 1; String[][] office = new String[rows][columns]; int[][] numSteps = new int[rows][columns]; ArrayList<Integer> xloc = new ArrayList<Integer>(); ArrayList<Integer> yloc = new ArrayList<Integer>();
+		for(int r = 0; r < rows; r++){ for (int c = 0; c < columns; c++){ //creates visualization of office
+			int numOnes = 0;
+			String binary = Integer.toBinaryString(c * c + 3 * c + 2 * c * r + r + r * r + favoriteNumber); //computes binary form of arbitrary equation
+			for(int letter = 0; letter < binary.length(); letter++){ if(Integer.parseInt(binary.substring(letter, letter + 1)) == 1){ numOnes += 1; } } //calculates # of 1's in binary string
+			if(numOnes % 2 == 0){ office[r][c] = "."; } //if # of 1's is equal, block is open space
+			else{ office[r][c] = "#"; } //if # of 1's is odd, block is wall
+		} }//initializes open blocks around goal with "1", indicating 1 step taken to reach block
+		for(int outerblock = -1; outerblock <= 1; outerblock += 2){ if(office[goalRow+outerblock][goalColumn].equals(".")){ numSteps[goalRow+outerblock][goalColumn] = steps; } if(office[goalRow][goalColumn+outerblock].equals(".")){ numSteps[goalRow][goalColumn+outerblock] = steps; } }
+		while(numSteps[1][1] == 0){ //repeat until number of steps to reach starting point is found
+			for(int i=0; i<rows; i++){ for(int j=0; j<columns; j++){ if(numSteps[i][j] == steps){ xloc.add(i); yloc.add(j); } } } //temporarily stores coordinates with k steps
+			steps++;
+			for(int block = 0; block < xloc.size(); block++){ for(int outerblock = -1; outerblock <= 1; outerblock += 2){ //if adjacent blocks to k blocks are open, update them with k+1 steps
+				int x = xloc.get(block); int y = yloc.get(block);	
+				if(office[x + outerblock][y].equals(".") && numSteps[x + outerblock][y] == 0 && !(x + outerblock == goalRow && y == goalColumn) && x + outerblock > 0 && x + outerblock < rows - 1 && y > 0 && y < columns - 1){ numSteps[x + outerblock][y] = steps; }
+				if(office[x][y + outerblock].equals(".")&& numSteps[x][y + outerblock] == 0 && !(x == goalRow && y + outerblock == goalColumn)  && x > 0 && x < rows - 1 && y + outerblock > 0 && y + outerblock < columns - 1){ numSteps[x][y + outerblock] = steps; }
+			} }
+			xloc.clear(); yloc.clear();
+		} System.out.println("You're only " + numSteps[1][1] + " steps away!");
+	}	
+}
