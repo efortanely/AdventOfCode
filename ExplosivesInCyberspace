@@ -1,0 +1,19 @@
+public class ExplosivesInCyberspace {
+	public static void main(String[] args){
+		String compressed = args[0]; String uncompressed = ""; int length; int freq; String manip; String input; String[] marker;
+		for(int c = 0; c < compressed.length(); c++){
+			if(!(compressed.substring(c, c+1).equals("("))){ uncompressed = uncompressed.concat(compressed.substring(c, c+1)); }
+			else{ //grab marker depending on length of input numbers
+				if(compressed.substring(c+8, c+9).equals(")")){ input = compressed.substring(c+1, c+8); } //ex (111x111)
+				else if(compressed.substring(c+7, c+8).equals(")")){ input = compressed.substring(c+1, c+7); } //ex (11x111)
+				else if(compressed.substring(c+6, c+7).equals(")")){ input = compressed.substring(c+1, c+6); } //ex (1x111)
+				else if(compressed.substring(c+5, c+6).equals(")")){ input = compressed.substring(c+1, c+5); } //ex (1x11)
+				else{ input = compressed.substring(c+1, c+4); } //ex (1x1)
+				marker = input.split("x"); length = Integer.parseInt(marker[0]); freq = Integer.parseInt(marker[1]);
+				manip = compressed.substring(c + input.length() + 2, c + input.length() + 2 + length); //string to repeat
+				for(int f = 0; f < freq; f++){ uncompressed = uncompressed.concat(manip); }
+				c = c + (input.length() + 2) - 1 + length; //continue searching compressed after marker and string used to repeat
+			}
+		} System.out.println("Your uncompressed file is " + uncompressed.length() + " characters long. Yikes.");
+	}
+}
